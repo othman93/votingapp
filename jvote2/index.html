@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<style type="text/css">
+
+		#vote img{
+			width : 70px;
+		}
+	</style>
+
+	<meta charset="utf-8">
+
+	<meta http-equiv='X-UA-Compatible' content='IE-edge'>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rem="stylesheet" href="css/bootstrap-theme.min.css">
+
+
+	<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/jVote.js"></script>
+	<script type="text/javascript">
+	/*<![CDATA[*/
+	var v;
+	var arr = new Array();
+	window.onload = function()
+	{
+		v = new jVote('vote', {max:5,min:1,click:doStuff,labels:['1','2','3','4','5']});
+	};
+	function doStuff(event, yourchoice)
+	{
+		
+		$.ajax({
+                url: "http://localhost/votingapp/post.py",
+                type: "post",
+                datatype: "html",
+                data: {
+                		vote : yourchoice
+                		}
+            }).done(function(response){
+            	alert("OK");
+            }).fail(function(response){
+            	$("#div").html(response);
+                        console.log("There is a response"); 
+                       	$("#success-alert").show();
+						$("#success-alert").fadeTo(2000,500).slideUp(500, function(){
+							$("#success-alert").slideUp(500);
+						});
+            });
+		
+	}
+
+
+	/*]]>*/
+	</script>
+	<title>Pepper : Voting System</title>
+</head>
+
+
+	<body>
+
+		<div class="container">
+
+
+			<form role="form">
+			  <div class="form-group">
+			  <button id="btn-save" type="submit" class="btn" style="color: transparent; background-color: transparent; border-color: transparent;">Save to file</button>
+			</form>
+
+
+			<div class="row" style="margin-top: 5%">
+ 				<center>
+					<img src="logo.png" width="350px">
+				</center>
+
+				<div class="col-sm-12 text-center" style="margin-top:20px;">
+					<h1>Quelle est votre satisfaction globale concernant cet événement ?</h1>
+					<p>&nbsp;</p>
+					<div id="vote"></div>
+				</div>
+
+			</div>
+
+			<div class="alert alert-success text-center" id="success-alert" hidden="true" style="margin-top: 25px;">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong>Merci pour votre participation ! </strong>
+					Votre vote a bien été pris en compte ! 
+			</div>
+
+			<div id="div">Default Stuff</div>
+		</div>
+	</body>
+
+
+</html>
